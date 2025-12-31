@@ -5,10 +5,12 @@ import { useState } from 'react'
 export default function HomePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setErrorMessage('')
     
     const form = e.currentTarget
     const formData = new FormData(form)
@@ -25,9 +27,12 @@ export default function HomePage() {
       if (response.ok) {
         setIsSubmitted(true)
         form.reset()
+      } else {
+        setErrorMessage('حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.')
       }
     } catch (error) {
       console.error('Form submission error:', error)
+      setErrorMessage('حدث خطأ أثناء الاتصال. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.')
     } finally {
       setIsSubmitting(false)
     }
@@ -245,6 +250,12 @@ export default function HomePage() {
                   >
                     {isSubmitting ? 'جاري الإرسال...' : 'احصل على وصول مبكر مجاناً 🚀'}
                   </button>
+
+                  {errorMessage && (
+                    <div className="animate-fade-in rounded-lg bg-red-50 p-4 text-center text-red-700">
+                      {errorMessage}
+                    </div>
+                  )}
 
                   <p className="text-center text-xs text-slate-500">
                     نحن نحترم خصوصيتك. لن نشارك بياناتك أبداً. 🔒
